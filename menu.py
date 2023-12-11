@@ -1,5 +1,9 @@
+import os
 import sys
 import pygame
+
+from db import register_user
+from objects.ghost import resource_path
 from ready import Text
 from objects.field import size
 
@@ -30,7 +34,8 @@ def main_menu(screen, game_action=None, high_score_action=None):
     blue = 0, 0, 255
     bright_blue = 0, 206, 209
 
-    photo = pygame.image.load('res/img/1.png')
+    path = resource_path(os.path.join('img', '1.png'))
+    photo = pygame.image.load(path)
 
     game_over = False
 
@@ -60,6 +65,7 @@ def main_menu(screen, game_action=None, high_score_action=None):
     text_object3.update_position(size[0] / 2 - text_size[0] / 2,
                                  size[1] / 2 + 200)
 
+
     while not game_over:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -70,6 +76,7 @@ def main_menu(screen, game_action=None, high_score_action=None):
         button(*btn1, bright_blue, blue, screen, game_action)
         button(*btn2, bright_blue, blue, screen, high_score_action)
         button(*btn3, bright_blue, blue, screen, exit)
+
         text_object1.draw(screen)
         text_object2.draw(screen)
         text_object3.draw(screen)

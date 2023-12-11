@@ -1,21 +1,56 @@
+import os
+import sys
+
 import pygame
 from random import randint
 from objects.field import pole_xy, get_pos_in_field, is_cell_centre
 from objects.lee_pathfinder import *
 from copy import deepcopy
 
+def resource_path(relative):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative)
+    return os.path.join(relative)
+
+# Переменные для exe файла
+path = resource_path(os.path.join('img', 'blinky_0.png'))
+blinky_0 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'blinky_1.png'))
+blinky_1 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'clyde_0.png'))
+clyde_0 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'clyde_1.png'))
+clyde_1 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'inky_0.png'))
+inky_0 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'inky_1.png'))
+inky_1 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'pinky_0.png'))
+pinky_0 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'pinky_1.png'))
+pinky_1 = pygame.image.load(path)
+
+path = resource_path(os.path.join('img', 'scared.png'))
+scared = pygame.image.load(path)
 
 class GhostBase:
     images = {
-        'scared': pygame.image.load('res/img/scared.png'),
-        'blinky': [pygame.image.load('res/img/blinky_0.png'),
-                   pygame.image.load('res/img/blinky_1.png')],
-        'clyde': [pygame.image.load('res/img/clyde_0.png'),
-                  pygame.image.load('res/img/clyde_1.png')],
-        'inky': [pygame.image.load('res/img/inky_0.png'),
-                 pygame.image.load('res/img/inky_1.png')],
-        'pinky': [pygame.image.load('res/img/pinky_0.png'),
-                  pygame.image.load('res/img/pinky_1.png')]
+        'scared': scared,
+        'blinky': [blinky_0,
+                   blinky_1],
+        'clyde': [clyde_0,
+                  clyde_1],
+        'inky': [inky_0,
+                 inky_1],
+        'pinky': [pinky_0,
+                  pinky_1]
     }
     direction_vector = {'up': [0, -1], 'down': [0, 1], 'left': [-1, 0], 'right': [1, 0]}
 

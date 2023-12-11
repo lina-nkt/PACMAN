@@ -1,5 +1,8 @@
 import sys, pygame
 
+from objects.ghost import resource_path
+
+path = resource_path('crackman.ttf')
 
 class Text:
     def __init__(self, data, size, x=0, y=0, color=(255, 255, 255)):
@@ -7,7 +10,7 @@ class Text:
         self.data = data
         self.size = size
         self.color = color
-        self.font = pygame.font.Font('crackman.ttf', self.size)
+        self.font = pygame.font.Font(path, self.size)
         self.surface = self.font.render(self.data, True, self.color)
 
     def update_position(self, x, y):

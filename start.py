@@ -1,11 +1,13 @@
+import sqlite3
 import sys
 import pygame
+
+from db import add_new_score, highscore_table, register_user
 from objects.ghosts import Blinky, Pinky, Inky, Clyde
 from objects.field import size, pole_xy, show_field, z, \
     is_cell_centre, get_pos_in_field
 from objects.grain_spawn import spawn_grain, check_and_remove_grain
 from objects.pacman import Pacman, eat_or_be_eated
-from highscore import highscore_table, HighscoreTable
 from menu import main_menu
 from pause import paused
 from ready import Text
@@ -13,18 +15,22 @@ from objects.uipacman import ScoreLable, Health
 
 
 def game(screen):
+    db = sqlite3.connect('pacman_scores.db')
+    cursor = db.cursor()
+
     black = (0, 0, 0)
 
-    htable = HighscoreTable()
-    max_score = htable.max_score
+    max_score = cursor.execute("SELECT MAX(score) FROM pacman_scores").fetchone()[0]
     highscore_labl = Text("high score", 18)
-    highscore = Text(str(max_score), 18)
+    if max_score != None:
+        highscore = Text(str(max_score), 18)
+    else:
+        highscore = Text("0", 18)
 
     txt_size = highscore_labl.get_text_size()
     highscore_labl.update_position(size[0] * 3 // 4 - txt_size[0] / 2, 0)
     txt_size = highscore.get_text_size()
     highscore.update_position(size[0] * 3 // 4 - txt_size[0] / 2, 21)
-    del (htable)
     score_labl = Text("score", 20)
     txt_size = score_labl.get_text_size()
     score_labl.update_position(size[0] // 4 - txt_size[0] / 2, 0)
@@ -131,9 +137,6 @@ def game(screen):
 
         if hp.value == 0:
             game_over = True
-            start_round = False
-            htable = HighscoreTable()
-            htable.add_new_score(score.value)
             wine = (255, 0, 0)
             txt = Text('You Lose!', 60, 0, 0, wine)
             txt_size = txt.get_text_size()
@@ -143,10 +146,13 @@ def game(screen):
             pygame.display.flip()
             pygame.time.delay(3000)
 
+            username = register_user(screen)
+            print(username)
+            add_new_score(score.value, username)
+
         if len(grain_array) == 0:
             game_over = True
-            htable = HighscoreTable()
-            htable.add_new_score(score.value)
+
             yellow = (255, 255, 0)
             txt = Text('You Win!', 60, 0, 0, yellow)
             txt_size = txt.get_text_size()
@@ -155,6 +161,10 @@ def game(screen):
             txt.draw(screen)
             pygame.display.flip()
             pygame.time.delay(3000)
+
+            username = register_user(screen)
+            print(username)
+            add_new_score(score.value, username)
 
         if start_round:
             pacman = Pacman(*pacman_start_pos)
@@ -178,6 +188,8 @@ def game(screen):
 
         pygame.display.flip()
         pygame.time.wait(20)
+
+
 
     if game_quit:
         sys.exit(0)
